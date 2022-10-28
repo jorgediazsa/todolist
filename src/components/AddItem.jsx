@@ -1,10 +1,6 @@
 import { Form } from "react-bootstrap";
 import { useState } from "react";
-import {
-  useMutation,
-  QueryClient,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useAddTodo } from "../hooks/list.js";
 
@@ -19,7 +15,8 @@ function AddItem() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    mutation.mutate({ title: todo });
+    mutation.mutate(todo);
+    setTodo("");
   }
 
   return (

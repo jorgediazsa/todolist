@@ -1,13 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
-import { useTodoList } from "hooks/list.js";
-import { Alert, ListGroup } from "react-bootstrap";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useDoneTodo, useTodoList } from "hooks/list.js";
+import { Alert, ListGroup, Form } from "react-bootstrap";
 
 function List() {
+  const queryClient = useQueryClient();
   const {
     isLoading,
     data: todos = [],
     error,
   } = useQuery(["todos"], useTodoList);
+
+  const mutation = useMutation(useDoneTodo, {
+    onSuccess: () => queryClient.invalidateQueries(["todos"]),
+  });
 
   if (isLoading) return "Loading...";
 
@@ -17,10 +22,19 @@ function List() {
     return <Alert variant="info">There is no todos yet</Alert>;
   }
 
+  const handleComplete = (todo) => mutation.mutate(todo);
+
   return (
     <ListGroup>
       {todos.map((todo, key) => (
-        <ListGroup.Item key={key}>{todo.title}</ListGroup.Item>
+        <ListGroup.Item key={key}>
+          <Form.Check
+            type="checkbox"
+            id={`complete-${key}`}
+            onClick={() => handleComplete(todo)}
+            label={todo.title}
+          />
+        </ListGroup.Item>
       ))}
     </ListGroup>
   );
