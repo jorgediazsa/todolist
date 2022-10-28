@@ -32,4 +32,10 @@ function useDoneTodo(todo) {
   }).then((res) => res.json());
 }
 
-export { useTodoList, useAddTodo, useDoneTodo };
+function useDeleteTodo(todo) {
+  return fetch(`${baseUrl}todos/${todo.id}`, {
+    method: "DELETE",
+  }).then((res) => res.json());
+}
+
+export { useTodoList, useAddTodo, useDoneTodo, useDeleteTodo };

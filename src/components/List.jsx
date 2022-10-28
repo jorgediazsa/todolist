@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useDoneTodo, useTodoList } from "hooks/list.js";
-import { Alert, ListGroup, Form } from "react-bootstrap";
+import { useDeleteTodo, useDoneTodo, useTodoList } from "hooks/list.js";
+import { Alert, ListGroup, Form, Badge, Row, Col } from "react-bootstrap";
+import { BsFillTrashFill } from "react-icons/bs";
 
 function List() {
   const queryClient = useQueryClient();
@@ -10,7 +11,11 @@ function List() {
     error,
   } = useQuery(["todos"], useTodoList);
 
-  const mutation = useMutation(useDoneTodo, {
+  const { mutate: completeTodo } = useMutation(useDoneTodo, {
+    onSuccess: () => queryClient.invalidateQueries(["todos"]),
+  });
+
+  const { mutate: deleteTodo } = useMutation(useDeleteTodo, {
     onSuccess: () => queryClient.invalidateQueries(["todos"]),
   });
 
@@ -22,18 +27,31 @@ function List() {
     return <Alert variant="info">There is no todos yet</Alert>;
   }
 
-  const handleComplete = (todo) => mutation.mutate(todo);
-
   return (
     <ListGroup>
       {todos.map((todo, key) => (
         <ListGroup.Item key={key}>
-          <Form.Check
-            type="checkbox"
-            id={`complete-${key}`}
-            onClick={() => handleComplete(todo)}
-            label={todo.title}
-          />
+          <Row>
+            <Col sm={11}>
+              <Form.Check
+                type="checkbox"
+                id={`complete-${key}`}
+                onClick={() => completeTodo(todo)}
+                label={todo.title}
+              />
+            </Col>
+            <Col>
+              <Badge
+                onClick={() => deleteTodo(todo)}
+                bg="light"
+                text="dark"
+                pill
+                style={{ cursor: "pointer" }}
+              >
+                <BsFillTrashFill />
+              </Badge>
+            </Col>
+          </Row>
         </ListGroup.Item>
       ))}
     </ListGroup>
