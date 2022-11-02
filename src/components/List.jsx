@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDeleteTodo, useDoneTodo, useTodoList } from "hooks/list.js";
-import { Alert, ListGroup, Form, Badge, Row, Col } from "react-bootstrap";
-import { BsFillTrashFill } from "react-icons/bs";
+import { Alert, ListGroup, Badge, Row, Col } from "react-bootstrap";
+import { BsFillCheckCircleFill, BsFillTrashFill } from "react-icons/bs";
 
 function List() {
   const queryClient = useQueryClient();
@@ -32,15 +32,19 @@ function List() {
       {todos.map((todo, key) => (
         <ListGroup.Item key={key}>
           <Row>
-            <Col sm={11}>
-              <Form.Check
-                type="checkbox"
-                id={`complete-${key}`}
+            <Col sm={1}>
+              <Badge
                 onClick={() => completeTodo(todo)}
-                label={todo.title}
-              />
+                bg="light"
+                text="dark"
+                pill
+                style={{ cursor: "pointer" }}
+              >
+                <BsFillCheckCircleFill />
+              </Badge>
             </Col>
-            <Col>
+            <Col sm={10}>{todo.title}</Col>
+            <Col sm={1}>
               <Badge
                 onClick={() => deleteTodo(todo)}
                 bg="light"
