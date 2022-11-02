@@ -11,20 +11,18 @@ function useTodoList() {
 function useAddTodo(todo) {
   return fetch(`${baseUrl}todos`, {
     method: "POST",
-    body: JSON.stringify(todoBuilder({ title: todo })),
+    body: JSON.stringify(todoBuilder(todo)),
     headers: {
       "Content-Type": "application/json",
     },
   }).then((res) => res.json());
 }
 
-function useDoneTodo(todo) {
+function useEditTodo(todo) {
   return fetch(`${baseUrl}todos/${todo.id}`, {
     method: "PUT",
     body: JSON.stringify({
       ...todo,
-      complete: true,
-      completedOn: Date.now(),
     }),
     headers: {
       "Content-Type": "application/json",
@@ -38,4 +36,4 @@ function useDeleteTodo(todo) {
   }).then((res) => res.json());
 }
 
-export { useTodoList, useAddTodo, useDoneTodo, useDeleteTodo };
+export { useTodoList, useAddTodo, useEditTodo, useDeleteTodo };
